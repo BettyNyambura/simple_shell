@@ -9,22 +9,22 @@ int main(void)
 
 	while (status)
 	{
-	printf("($) "); // Display the shell prompt
-	command = get_input(&buffer, &bufsize); // Get input from user
+	printf("($) ");
+	command = get_input(&buffer, &bufsize);
 
-	if (command == NULL) // If Ctrl+D is pressed or getline fails
-        {
-            printf("\n");
-            free(buffer);
-            exit(EXIT_SUCCESS);
-        }
+	if (command == NULL)
+	{
+	printf("\n");
+	free(buffer);
+	exit(EXIT_SUCCESS);
+	}
 
-        if (_strlen(command) > 0) // If command is not empty
-        {
-            status = execute(command); // Execute the command
-        }
-    }
+	if (_strlen(command) > 0)
+	{
+	status = execute(command);
+	}
+	}
 
-    free(buffer);
-    return (0);
+	free(buffer);
+	return (0);
 }
