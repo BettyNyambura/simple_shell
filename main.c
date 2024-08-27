@@ -1,30 +1,49 @@
-#include "shell.h"
-
-int main(void)
+#include "simple_shell.h"
+/**
+ * main - Prompter and command excecutor
+ * @ac: Counts Arguments
+ * @av: Vector Arguments
+ *
+ * Return: 0
+ */
+int main(int ac, char **av __attribute__((unused)))
 {
-	char *buffer = NULL;
-	size_t bufsize = 0;
-	char *command;
-	int status = 1;
+	char *buffer, *resultbuf, *enter = "\n";
+	size_t buffersize = 120;
+	int a;
 
-	while (status)
+	if (ac != 1)
 	{
-	printf("($) ");
-	command = get_input(&buffer, &bufsize);
-
-	if (command == NULL)
+		perror("Usage");
+		exit(EXIT_FAILURE);
+	}
+	buffer = malloc(buffersize);
+	if (buffer == NULL)
 	{
-	printf("\n");
-	free(buffer);
-	exit(EXIT_SUCCESS);
+		perror("malloc");
+		exit(EXIT_FAILURE);
 	}
-
-	if (_strlen(command) > 0)
+	signal(SIGINT, signalHandler);
+	a = isatty(0);
+	while (1)
 	{
-	status = execute(command);
+		if (a)
+		{
+			write(1, "#simple_shell$ ", _strlen("#simple_shell$ "));
+			fflush(stdout);
+		}
+		resultbuf = readInput(&buffer, &buffersize);
+		if (resultbuf == NULL)
+		{
+			write(1, enter, _strlen(enter));
+			exit(EXIT_SUCCESS);
+		}
+		shell_executor(resultbuf);
+		if (!a)
+		{
+			break;
+		}
 	}
-	}
-
 	free(buffer);
 	return (0);
 }

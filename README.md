@@ -1,1 +1,8 @@
-Readme file for Simple_shell project
+Simple Shell Project
+---
+Simple shell project implemented in C
+
+---
+Authors
+	1. Betty Nyambura
+	2. Abel Sum

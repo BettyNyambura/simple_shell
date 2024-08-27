@@ -14,11 +14,14 @@
 extern char **environ;
 
 int _strlen(char *str);
-char *get_input(char **buffer, size_t *bufsize);
+char *readInput(char **linebuffer, size_t *buffersize);
+int _strCmp(const char *str1, const char *str2);
+char *pathFinder(char *command);
 char *strDup(char *str);
 char *strCpy(char *dest, char *src);
 char *strCat(char *str2, char *str1);
-int execute(char *command);
-void signal_handler(int file_des);
+int _toka(char **args);
+void shell_executor(char *buffer);
+void signalHandler(int signalnum __attribute__((unused)));
 
 #endif
