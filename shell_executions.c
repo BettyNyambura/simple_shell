@@ -41,7 +41,7 @@ void shell_executor(char *buffer)
 		args[b] = strtok(NULL, " \n");
 	}
 	args[b] = NULL;
-	if (args[0] != NULL && _strCmp(args[0], "exit") == 0)
+	if (_strCmp(args[0], "exit") == 0)
 	{
 		free(buffer);
 		exit(0);
@@ -52,19 +52,29 @@ void shell_executor(char *buffer)
 		perror("./shell");
 		return;
 	}
-	if (fork() != 0)
+	struct stat st;
+
+	if (stat(path, &st) == 0)
 	{
-	wait(NULL);
+		if (fork() != 0)
+		{
+			wait(NULL);
+		}
+		else
+		{
+			x = execve(path, args, environ);
+			if (x == -1)
+			{
+				perror("./shell");
+				exit(EXIT_FAILURE);
+			}
+		}
 	}
 	else
 	{
-		x = execve(path, args, environ);
-		if (x == -1)
-		{
-			perror("./shell");
-			exit(EXIT_FAILURE);
-		}
+		perror("./shell");
 	}
+
 	if (isatty(0))
 	free(path);
 }
@@ -90,7 +100,7 @@ char *_getenv(char *name)
 			break;
 		}
 	}
-	return (retval);	
+	return (retval);
 }
 /**
  * pathFinder - Gets the path
