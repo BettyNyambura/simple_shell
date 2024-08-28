@@ -90,8 +90,7 @@ char *_getenv(char *name)
 			break;
 		}
 	}
-	return (retval);
-	
+	return (retval);	
 }
 /**
  * pathFinder - Gets the path
