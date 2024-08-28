@@ -13,6 +13,8 @@ char *readInput(char **linebuffer, size_t *buffersize)
 	characters = getline(linebuffer, buffersize, stdin);
 	if (characters == -1)
 	{
+		if (*linebuffer)
+			free(*linebuffer);
 		return (NULL);
 	}
 	if ((*linebuffer)[characters - 1] == '\n')

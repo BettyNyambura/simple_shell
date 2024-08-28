@@ -25,7 +25,7 @@ int main(int ac, char **av __attribute__((unused)))
 	}
 	signal(SIGINT, signalHandler);
 
-	a = isatty(0);
+	a = isatty(fileno(stdin));
 	while (1)
 	{
 		if (a)

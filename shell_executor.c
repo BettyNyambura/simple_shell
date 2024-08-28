@@ -9,18 +9,29 @@
 
 void execute_command(char *path, char **args)
 {
-	int x;
+	pid_t pid;
+	int status;
 
-	if (fork() != 0)
+	pid = fork();
+	if (pid == -1)
 	{
-		wait(NULL);
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+
+	if (pid == 0)
+	{
+		if (execve(path, args, environ) == -1)
+		{
+			perror("execve");
+			exit(EXIT_FAILURE);
+		}
 	}
 	else
 	{
-		x = execve(path, args, environ);
-		if (x == -1)
+		if (waitpid(pid, &status, 0) == -1)
 		{
-			perror("./shell");
+			perror("waitpid");
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -56,7 +67,7 @@ void shell_executor(char *buffer)
 		return;
 	}
 
-	if (stat(path, &st) == 0)
+	if (stat(path, &st) == 0 && S_ISREG(st.st_mode) && (st.st_mode & S_IXUSR))
 	{
 		execute_command(path, args);
 	}
@@ -65,6 +76,6 @@ void shell_executor(char *buffer)
 		perror("./shell");
 	}
 
-	if (isatty(0))
+	if (isatty(fileno(stdin)))
 		free(path);
 }

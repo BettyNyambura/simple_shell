@@ -77,22 +77,27 @@ char *pathFinder(char *command)
 	struct stat buffer;
 
 	if (stat(command, &buffer) == 0)
-		return (command);
+		return (strDup(command));
 	path = _getenv("PATH");
 	if (path)
 	{
 		path_dup = strDup(path);
+		if (!path_dup)
+			return (NULL);
 		token = strtok(path_dup, ":");
 		while (token != NULL)
 		{
 			dir_len = _strlen(token);
 			file_link = malloc(cmd_len + dir_len + 2);
 			if (file_link == NULL)
+			{
+				free(path_dup);
 				return (NULL);
+			}
 			strCpy(file_link, token);
 			strCat(file_link, "/");
 			strCat(file_link, command);
-			strCat(file_link, "\0");
+
 			if (stat(file_link, &buffer) == 0)
 			{
 				file_path = file_link;
@@ -106,9 +111,5 @@ char *pathFinder(char *command)
 		}
 		free(path_dup);
 	}
-	if (file_path)
-	{
-		return (file_path);
-	}
-	return (NULL);
+	return (file_path);
 }
