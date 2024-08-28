@@ -37,6 +37,7 @@ void shell_executor(char *buffer)
 {
 	char *args[100];
 	char *path;
+	struct stat st;
 
 	parse_arguments(buffer, args);
 	if (args[0] == NULL)
@@ -54,8 +55,6 @@ void shell_executor(char *buffer)
 		perror("./shell");
 		return;
 	}
-
-	struct stat st;
 
 	if (stat(path, &st) == 0)
 	{

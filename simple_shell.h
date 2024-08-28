@@ -21,9 +21,9 @@ char *strDup(char *str);
 char *strCpy(char *dest, char *src);
 char *strCat(char *str2, char *str1);
 int _toka(char **args);
-void shell_executor(char *buffer, char **args);
+void shell_executor(char *buffer);
 void signalHandler(int signalnum __attribute__((unused)));
-void parse_arguments(buffer, args);
+void parse_arguments(char *buffer, char **args);
 void execute_command(char *path, char **args);
 
 #endif
