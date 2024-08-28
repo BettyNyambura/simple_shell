@@ -1,8 +1,6 @@
 #include "simple_shell.h"
 /**
  * main - Prompter and command excecutor
- * @ac: Counts Arguments
- * @av: Vector Arguments
  *
  * Return: 0
  */
