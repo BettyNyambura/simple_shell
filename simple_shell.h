@@ -26,5 +26,7 @@ void signalHandler(int signalnum __attribute__((unused)));
 void parse_arguments(char *buffer, char **args);
 void execute_command(char *path, char **args);
 void signalHandler(int signalnum);
+char *_getenv(char *name);
+int strNcmp(char *str1, char *str2, size_t n);
 
 #endif

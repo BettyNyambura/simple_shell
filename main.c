@@ -6,42 +6,34 @@
  *
  * Return: 0
  */
-int main(int ac, char **av __attribute__((unused)))
+int main(void)
 {
-	char *buffer = NULL, *resultbuf;
-	size_t buffersize = 120;
-	int a;
+	char *buffer = NULL;
+	size_t buffersize = 0;
+	ssize_t nread;
+	int interactive = isatty(STDIN_FILENO);
 
-	if (ac != 1)
-	{
-		perror("Usage");
-		exit(EXIT_FAILURE);
-	}
-	buffer = malloc(buffersize);
-	if (buffer == NULL)
-	{
-		perror("malloc");
-		exit(EXIT_FAILURE);
-	}
 	signal(SIGINT, signalHandler);
 
-	a = isatty(fileno(stdin));
 	while (1)
 	{
-		if (a)
+		if (interactive)
+			write(STDOUT_FILENO, "#simple_shell$ ", 15);
+
+		nread = getline(&buffer, &buffersize, stdin);
+		if (nread == -1)
 		{
-			write(1, "#simple_shell$ ", _strlen("#simple_shell$ "));
-			fflush(stdout);
+			if (interactive)
+				write(STDOUT_FILENO, "\n", 1);
+			break;
 		}
-		resultbuf = readInput(&buffer, &buffersize);
-		if (resultbuf == NULL)
-		{
-			write(1, "\n", 1);
-			free(buffer);
-			exit(EXIT_SUCCESS);
-		}
-		shell_executor(resultbuf);
+
+		if (buffer[nread - 1] == '\n')
+			buffer[nread - 1] = '\0';
+
+		shell_executor(buffer);
 	}
+
 	free(buffer);
 	return (0);
 }
