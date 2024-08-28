@@ -20,19 +20,17 @@ int strNcmp(char *str1, char *str2, size_t n)
 }
 
 /**
- * shell_executor - Shell executor
+ * parse_arguments - parses arguments
  * @buffer: String containing commands
- *
+ * @args: arguments
  * Return: void
  */
-void shell_executor(char *buffer)
+void parse_arguments(char *buffer, char **args)
 {
-	char *args[100];
-	int b, x;
-	char *path;
+	int b = 0;
 
-	b = 0;
 	args[b] = strtok(buffer, " \n");
+
 	if (args[b] == NULL)
 		return;
 	while (args[b] != NULL && b <= 99)
@@ -41,34 +39,68 @@ void shell_executor(char *buffer)
 		args[b] = strtok(NULL, " \n");
 	}
 	args[b] = NULL;
+}
+
+/**
+ * execute_command - executes command
+ * @path: path
+ * @args: arguments
+ * Return: void
+*/
+
+void execute_command(char *path, char **args)
+{
+	int x;
+
+	if (fork() != 0)
+	{
+		wait(NULL);
+	}
+	else
+	{
+		x = execve(path, args, environ);
+		if (x == -1)
+		{
+			perror("./shell");
+			exit(EXIT_FAILURE);
+		}
+	}
+}
+
+/**
+ * shell_executor - shell exec
+ * @buffer: string with commands
+ *
+ * Return: void
+*/
+
+void shell_executor(char *buffer)
+{
+	char *args[100];
+	char *path;
+
+	parse_arguments(buffer, args);
+	if (args[0] == NULL)
+		return;
+
 	if (_strCmp(args[0], "exit") == 0)
 	{
 		free(buffer);
 		exit(0);
 	}
+
 	path = pathFinder(args[0]);
 	if (path == NULL)
 	{
 		perror("./shell");
 		return;
 	}
+
 	struct stat st;
 
 	if (stat(path, &st) == 0)
 	{
-		if (fork() != 0)
-		{
-			wait(NULL);
-		}
-		else
-		{
-			x = execve(path, args, environ);
-			if (x == -1)
-			{
-				perror("./shell");
-				exit(EXIT_FAILURE);
-			}
-		}
+		execute_command(path, args);
 	}
 	else
 	{
@@ -76,7 +108,7 @@ void shell_executor(char *buffer)
 	}
 
 	if (isatty(0))
-	free(path);
+		free(path);
 }
 
 /**
