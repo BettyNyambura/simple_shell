@@ -20,7 +20,7 @@ void execute_command(char *path, char **args)
 		x = execve(path, args, environ);
 		if (x == -1)
 		{
-			perror("./shell");
+			perror("execve");
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -46,13 +46,13 @@ void shell_executor(char *buffer)
 	if (_strCmp(args[0], "exit") == 0)
 	{
 		free(buffer);
-		exit(0);
+		exit(EXIT_SUCCESS);
 	}
 
 	path = pathFinder(args[0]);
 	if (path == NULL)
 	{
-		perror("./shell");
+		perror("pathFinder");
 		return;
 	}
 
@@ -62,9 +62,7 @@ void shell_executor(char *buffer)
 	}
 	else
 	{
-		perror("./shell");
+		perror("stat");
 	}
-
-	if (isatty(0))
-		free(path);
+	free(path);
 }

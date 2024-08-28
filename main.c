@@ -8,7 +8,7 @@
  */
 int main(int ac, char **av __attribute__((unused)))
 {
-	char *buffer, *resultbuf, *enter = "\n";
+	char *buffer = NULL, *resultbuf;
 	size_t buffersize = 120;
 	int a;
 
@@ -24,6 +24,7 @@ int main(int ac, char **av __attribute__((unused)))
 		exit(EXIT_FAILURE);
 	}
 	signal(SIGINT, signalHandler);
+
 	a = isatty(0);
 	while (1)
 	{
@@ -35,14 +36,11 @@ int main(int ac, char **av __attribute__((unused)))
 		resultbuf = readInput(&buffer, &buffersize);
 		if (resultbuf == NULL)
 		{
-			write(1, enter, _strlen(enter));
+			write(1, "\n", 1);
+			free(buffer);
 			exit(EXIT_SUCCESS);
 		}
 		shell_executor(resultbuf);
-		if (!a)
-		{
-			break;
-		}
 	}
 	free(buffer);
 	return (0);

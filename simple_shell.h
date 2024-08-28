@@ -25,5 +25,6 @@ void shell_executor(char *buffer);
 void signalHandler(int signalnum __attribute__((unused)));
 void parse_arguments(char *buffer, char **args);
 void execute_command(char *path, char **args);
+void signalHandler(int signalnum);
 
 #endif
