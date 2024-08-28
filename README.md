@@ -3,6 +3,6 @@ Simple Shell Project
 Simple shell project implemented in C
 
 ---
-Authors
+Authors:
 	1. Betty Nyambura
 	2. Abel Sum
