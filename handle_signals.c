@@ -1,7 +1,7 @@
 #include "simple_shell.h"
 /**
- * signalHandler - Handles signal
- * *@sn: the signal number
+ * handle_signal - Handles signal
+ * @sn: the signal number
  *Return: nothing
  */
 

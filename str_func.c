@@ -14,7 +14,7 @@ int _strlen(char *str)
 	return (1 + _strlen(str + 1));
 }
 /**
- * _strCmp - Compares 2 strings
+ * _strncmp - Compares 2 strings
  * @str1: First string
  * @str2: 2nd string
  *
