@@ -1,69 +1,28 @@
 #include "simple_shell.h"
 
 /**
- * shell_executor - shell exec
- * @buffer: string with commands
- *
- * Return: void
-*/
-
-void shell_executor(char *buffer)
+ * execution - executes input commands from users
+ *@cmd_p: command path
+ *@args:vector array of pointers to commands
+ * Return: 0
+ */
+void execution(char *cmd_p, char **args)
 {
-	char *args[100];
-	char *path;
-	struct stat st;
-
-	parse_arguments(buffer, args);
-
-	if (args[0] == NULL)
-		return;
-
-	if (_strCmp(args[0], "exit") == 0)
-	{
-		free(buffer);
-		exit(0);
-	}
-
-	path = pathFinder(args[0]);
-	if (path == NULL)
-	{
-		perror("./shell");
-		return;
-	}
-
-	if (stat(path, &st) == 0)
-	{
-		execute_command(path, args);
-	}
-	else
-	{
-		perror("./shell");
-	}
-
-	if (isatty(0))
-		free(path);
-}
-/**
- * execute_command - shell exec
- * @path: commands
- * @args: arguments
- *
- * Return: void
-*/
-
-
-void execute_command(char *path, char **args)
-{
+	pid_t child_pid;
 	int status;
+	char **env = environ;
 
-	if (fork() != 0)
+	child_pid = fork();
+	if (child_pid < 0)
+		perror(cmd_p);
+	if (child_pid == 0)
 	{
-		wait(&status);
+		execve(cmd_p, args, env);
+		perror(cmd_p);
+		free(cmd_p);
+		free_buffers(args);
+		exit(98);
 	}
 	else
-	{
-		execve(path, args, environ);
-		perror("./shell");
-		exit(EXIT_FAILURE);
-	}
+		wait(&status);
 }

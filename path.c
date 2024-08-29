@@ -1,52 +1,27 @@
 #include "simple_shell.h"
 
 /**
- * pathFinder - Gets the path
- * @command: Command to get its full path
- *
- * Return: 0
- */
-
-char *pathFinder(char *command)
+* find_path - finds the path
+* Return: !path, NULL else path
+*/
+char *find_path(void)
 {
-	char *path, *path_dup, *token, *file_link, *file_path = NULL;
-	int cmd_len = _strlen(command), dir_len;
-	struct stat buffer;
+	int a = 0;
+	char **env = environ, *path = NULL;
 
-	if (stat(command, &buffer) == 0)
-		return (strDup(command));
-	path = _getenv("PATH");
-	if (path)
+	while (*env)
 	{
-	path_dup = strDup(path);
-	if (!path_dup)
-		return (NULL);
-
-	token = strtok(path_dup, ":");
-	while (token != NULL)
-	{
-		dir_len = _strlen(token);
-		file_link = malloc(cmd_len + dir_len + 2);
-		if (file_link == NULL)
+		if (_strCmp(*env, "PATH=", 5) == 0)
 		{
-			free(path_dup);
-			return (NULL);
+			path = *env;
+			while (*path && a < 5)
+			{
+				path++;
+				a++;
+			}
+			return (path);
 		}
-		strCpy(file_link, token);
-		strCat(file_link, "/");
-		strCat(file_link, command);
-		if (stat(file_link, &buffer) == 0)
-		{
-			file_path = file_link;
-			break;
-		}
-		else
-		{
-			free(file_link);
-			token = strtok(NULL, ":");
-		}
+		env++;
 	}
-	free(path_dup);
-	}
-	return (file_path);
+	return (NULL);
 }
